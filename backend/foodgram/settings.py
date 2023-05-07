@@ -127,3 +127,9 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Constants
+
+MIN_COOKING_TIME = 1
+MIN_INGREDIENT_AMOUNT = 1
+EMPTY_VALUE_DISPLAY = '- Пусто -'

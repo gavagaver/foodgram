@@ -99,11 +99,10 @@ class Recipe(models.Model):
     image = models.ImageField(
         verbose_name='Изображение рецепта',
         help_text='Изображение рецепта',
-        upload_to='recipes/',
+        upload_to='recipe_img/',
     )
     tags = models.ManyToManyField(
         Tag,
-        through='RecipeTag',
         related_name='recipes',
         verbose_name='Теги рецепта',
         help_text='Теги рецепта',
@@ -137,19 +136,6 @@ class RecipeIngredient(models.Model):
             ),
         ),
         verbose_name='Количество'
-    )
-
-
-class RecipeTag(models.Model):
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        verbose_name='Рецепт',
-    )
-    tag = models.ForeignKey(
-        Tag,
-        on_delete=models.CASCADE,
-        verbose_name='Тег',
     )
 
 

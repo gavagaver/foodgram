@@ -121,12 +121,14 @@ class RecipeIngredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        verbose_name='Рецепт'
+        verbose_name='Рецепт',
+        help_text='Рецепт',
     )
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.PROTECT,
-        verbose_name='Ингредиент'
+        verbose_name='Ингредиент',
+        help_text='Ингредиент',
     )
     amount = models.PositiveSmallIntegerField(
         validators=(
@@ -135,7 +137,8 @@ class RecipeIngredient(models.Model):
                 message=f'Минимальное количество: {s.MIN_INGREDIENT_AMOUNT}',
             ),
         ),
-        verbose_name='Количество'
+        verbose_name='Количество',
+        help_text='Количество',
     )
 
 
@@ -143,12 +146,14 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         verbose_name='Пользователь',
+        help_text='Пользователь',
         related_name='favorites',
         on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
         Recipe,
         verbose_name='Рецепт',
+        help_text='Рецепт',
         related_name='favorites',
         on_delete=models.CASCADE,
     )
@@ -162,7 +167,7 @@ class Favorite(models.Model):
                     'user',
                     'recipe',
                 ),
-                name='unique_favorite'
+                name='unique_favorite',
             ),
         )
 
@@ -193,7 +198,7 @@ class ShoppingCart(models.Model):
                     'user',
                     'recipe',
                 ),
-                name='unique_shopping_cart'
+                name='unique_shopping_cart',
             ),
         )
 

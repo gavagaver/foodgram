@@ -7,10 +7,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
-from models import CustomUser, Subscribe
+from .models import User, Subscribe
 from .serializers import CustomUserSerializer
 
-User = CustomUser()
+User = get_user_model()
 
 
 class CustomUserViewSet(UserViewSet):

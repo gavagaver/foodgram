@@ -114,9 +114,8 @@ AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',
     ],
-
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
@@ -162,7 +161,7 @@ DJOSER = {
     'HIDE_USERS': False,
     "LOGIN_FIELD": "email",
     'PERMISSIONS': {
-        'user_list': ['rest_framework.permissions.AllowAny'],
+        'user_list': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly']
     },
     "SERIALIZERS": {
@@ -171,3 +170,6 @@ DJOSER = {
         "current_user": "users.serializers.CustomUserSerializer",
     },
 }
+
+# Import from csv-files
+DATA_PATH = BASE_DIR / 'data\\'

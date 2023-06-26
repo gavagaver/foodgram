@@ -1,14 +1,8 @@
 from django.conf import settings as s
 from django.contrib import admin
 
-from .models import (
-    Ingredient,
-    Tag,
-    Recipe,
-    RecipeIngredient,
-    Favorite,
-    ShoppingCart,
-)
+from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                     ShoppingCart, Tag)
 
 
 class IngredientAdmin(admin.ModelAdmin):

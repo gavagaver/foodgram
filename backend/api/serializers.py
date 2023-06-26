@@ -1,11 +1,11 @@
 from django.shortcuts import get_object_or_404
-from recipes.models import Ingredient, Tag, Recipe, RecipeIngredient
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
-from drf_extra_fields.fields import Base64ImageField
 
+from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
 from users.serializers import CustomUserSerializer
 
 

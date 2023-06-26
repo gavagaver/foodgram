@@ -1,21 +1,21 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import Ingredient, Tag, Recipe, Favorite, ShoppingCart, \
-    RecipeIngredient
-from foodgram.pagination import CustomPagination
 from rest_framework import status
 from rest_framework.decorators import action
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, \
-    IsAuthenticatedOrReadOnly
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
-from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
+from foodgram.pagination import CustomPagination
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tag)
 
 from .filters import IngredientFilter, RecipeFilter
-from .permissions import IsAuthorOrAdminOrReadOnly, IsAdminOrReadOnly
-from .serializers import IngredientSerializer, TagSerializer, \
-    RecipeReadSerializer, RecipeWriteSerializer, RecipeCardSerializer
+from .permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
+from .serializers import (IngredientSerializer, RecipeCardSerializer,
+                          RecipeReadSerializer, RecipeWriteSerializer,
+                          TagSerializer)
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -106,8 +106,8 @@ class RecipeViewSet(ModelViewSet):
             )
             ingredient_amount = ingredient.amount
             total_amounts[ingredient_label] = (
-                    total_amounts.get(ingredient_label, 0)
-                    + ingredient_amount
+                total_amounts.get(ingredient_label, 0)
+                + ingredient_amount
             )
 
         list_of_ingredients = []

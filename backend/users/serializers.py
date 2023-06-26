@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
 
 from recipes.models import Recipe
+
 from .models import User
 
 
@@ -28,8 +29,8 @@ class CustomUserSerializer(UserSerializer):
         request = self.context.get('request')
         user = request.user
         return (
-                not user.is_anonymous
-                and user.subscribers.filter(author=obj).exists()
+            not user.is_anonymous
+            and user.subscribers.filter(author=obj).exists()
         )
 
     class Meta:

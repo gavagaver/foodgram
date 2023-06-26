@@ -1,6 +1,7 @@
 from django.conf import settings as s
 from django.contrib import admin
-from .models import User, Subscribe
+
+from .models import Subscribe, User
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -28,4 +29,3 @@ class SubscribeAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Subscribe, SubscribeAdmin)
-

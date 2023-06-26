@@ -5,6 +5,7 @@ from .models import (
     Ingredient,
     Tag,
     Recipe,
+    RecipeIngredient,
     Favorite,
     ShoppingCart,
 )
@@ -79,6 +80,18 @@ class RecipeAdmin(admin.ModelAdmin):
         return obj.favorites.count()
 
 
+class RecipeIngredientAdmin(admin.ModelAdmin):
+    list_display = (
+        'recipe',
+        'ingredient',
+        'amount',
+    )
+    list_filter = (
+        'name',
+    )
+    empty_value_display = s.EMPTY_VALUE_DISPLAY
+
+
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = (
         'id',
@@ -116,5 +129,6 @@ class ShoppingCartAdmin(admin.ModelAdmin):
 admin.site.register(Ingredient, IngredientAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Recipe, RecipeAdmin)
+admin.site.register(RecipeIngredient, RecipeIngredientAdmin)
 admin.site.register(Favorite, FavoriteAdmin)
 admin.site.register(ShoppingCart, ShoppingCartAdmin)

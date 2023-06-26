@@ -10,16 +10,18 @@ class User(AbstractUser):
     )
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [
+    REQUIRED_FIELDS = (
         'username',
         'first_name',
         'last_name',
-    ]
+    )
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-        ordering = ('id',)
+        ordering = (
+            'id',
+        )
 
     def __str__(self):
         return f'{self.username} ({self.first_name} {self.last_name})'
@@ -42,7 +44,9 @@ class Subscribe(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
-        ordering = ('-id',)
+        ordering = (
+            '-id',
+        )
         constraints = (
             models.UniqueConstraint(
                 fields=(

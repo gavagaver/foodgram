@@ -10,11 +10,15 @@ class IngredientFilter(FilterSet):
 
     class Meta:
         model = Ingredient
-        fields = ('name',)
+        fields = (
+            'name',
+        )
 
 
 class RecipeFilter(FilterSet):
 
     class Meta:
         model = Recipe
-        fields = ('author',)
+        fields = (
+            'author',
+        )

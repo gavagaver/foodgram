@@ -61,6 +61,7 @@ class RecipeViewSet(ModelViewSet):
         if request.method == 'DELETE':
             Favorite.objects.filter(user=user, recipe=recipe).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+
         Favorite.objects.create(user=user, recipe=recipe)
         serializer = RecipeCardSerializer(recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -101,9 +102,7 @@ class RecipeViewSet(ModelViewSet):
         for ingredient in ingredients:
             name = ingredient.ingredient.name
             measurement_unit = ingredient.ingredient.measurement_unit
-            ingredient_label = (
-                f'{name} ({measurement_unit})'
-            )
+            ingredient_label = f'{name} ({measurement_unit})'
             ingredient_amount = ingredient.amount
             total_amounts[ingredient_label] = (
                 total_amounts.get(ingredient_label, 0)

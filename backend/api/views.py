@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import Ingredient, Tag, Recipe, Favorite, ShoppingCart, RecipeIngredient
+from recipes.models import Ingredient, Tag, Recipe, Favorite, ShoppingCart, \
+    RecipeIngredient
 from foodgram.pagination import CustomPagination
 from rest_framework import status
 from rest_framework.decorators import action
@@ -13,7 +14,8 @@ from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet
 
 from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAuthorOrAdminOrReadOnly, IsAdminOrReadOnly
-from .serializers import IngredientSerializer, TagSerializer, RecipeReadSerializer, RecipeWriteSerializer, RecipeCardSerializer
+from .serializers import IngredientSerializer, TagSerializer, \
+    RecipeReadSerializer, RecipeWriteSerializer, RecipeCardSerializer
 
 
 class IngredientViewSet(ReadOnlyModelViewSet):
@@ -22,12 +24,14 @@ class IngredientViewSet(ReadOnlyModelViewSet):
     filter_backends = (DjangoFilterBackend,)
     filterset_class = IngredientFilter
     permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = None
 
 
 class TagViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):
@@ -49,15 +53,16 @@ class RecipeViewSet(ModelViewSet):
         detail=True,
         url_path='favorite',
         methods=('POST', 'DELETE'),
+        permission_classes=(IsAuthenticated,)
     )
     def favorite(self, request, pk):
         recipe = get_object_or_404(Recipe, pk=pk)
+        user = request.user
         if request.method == 'DELETE':
-            Favorite.objects.filter(user=request.user, recipe=recipe).delete()
+            Favorite.objects.filter(user=user, recipe=recipe).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-
-        Favorite.objects.create(user=request.user, recipe=recipe)
-        serializer = self.get_serializer_class()
+        Favorite.objects.create(user=user, recipe=recipe)
+        serializer = RecipeCardSerializer(recipe)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(
@@ -68,7 +73,10 @@ class RecipeViewSet(ModelViewSet):
     def shopping_cart(self, request, pk):
         recipe = get_object_or_404(Recipe, pk=pk)
         if request.method == 'DELETE':
-            ShoppingCart.objects.filter(user=request.user, recipe=recipe).delete()
+            ShoppingCart.objects.filter(
+                user=request.user,
+                recipe=recipe
+            ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         ShoppingCart.objects.create(user=request.user, recipe=recipe)
@@ -86,22 +94,21 @@ class RecipeViewSet(ModelViewSet):
     )
     def download_shopping_cart(self, request):
         user = request.user
-        recipes_in_cart = user.shopping_cart.all()
-
         total_amounts = {}
-        for recipe in recipes_in_cart:
-            ingredients = RecipeIngredient.objects.filter(
-                recipe=recipe,
+        ingredients = RecipeIngredient.objects.filter(
+            recipe__shopping_cart__user=user
+        )
+        for ingredient in ingredients:
+            name = ingredient.ingredient.name
+            measurement_unit = ingredient.ingredient.measurement_unit
+            ingredient_label = (
+                f'{name} ({measurement_unit})'
             )
-            for ingredient in ingredients:
-                ingredient_label = (
-                    f'{ingredient.name} ({ingredient.measurement_unit})'
-                )
-                ingredient_amount = ingredient.amount
-                total_amounts[ingredient_label] = (
-                        total_amounts.get(ingredient_label, 0)
-                        + ingredient_amount
-                )
+            ingredient_amount = ingredient.amount
+            total_amounts[ingredient_label] = (
+                    total_amounts.get(ingredient_label, 0)
+                    + ingredient_amount
+            )
 
         list_of_ingredients = []
         for ingredient_label, amount in total_amounts.items():
@@ -109,7 +116,7 @@ class RecipeViewSet(ModelViewSet):
                 f'{ingredient_label} - {amount}'
             )
 
-        header = 'Ваш список покупок' + '-------------------\n'
+        header = 'Ваш список покупок\n' + '-------------------\n'
         footer = '-------------------\n' + 'Составлено в foodgram'
         response = HttpResponse(
             header + '\n' + '\n'.join(list_of_ingredients) + '\n' + footer,

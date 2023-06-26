@@ -9,7 +9,7 @@ from rest_framework.response import Response
 
 from foodgram.pagination import CustomPagination
 
-from .models import Subscribe, User
+from .models import Subscribe
 from .serializers import CustomUserSerializer, SubscribeSerializer
 
 User = get_user_model()

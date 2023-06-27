@@ -8,7 +8,6 @@ from rest_framework.permissions import (IsAuthenticated,
 from rest_framework.response import Response
 
 from foodgram.pagination import CustomPagination
-
 from .models import Subscribe
 from .serializers import CustomUserSerializer, SubscribeSerializer
 

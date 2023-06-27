@@ -10,7 +10,6 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from foodgram.pagination import CustomPagination
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, Tag)
-
 from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAdminOrReadOnly, IsAuthorOrAdminOrReadOnly
 from .serializers import (IngredientSerializer, RecipeCardSerializer,

@@ -158,6 +158,17 @@ class RecipeWriteSerializer(ModelSerializer):
         )
         return serializer.data
 
+    def validate(self, data):
+        ingredients = self.initial_data.get('ingredients')
+
+        id_list = [ingredient['id'] for ingredient in ingredients]
+        if len(set(id_list)) != len(id_list):
+            raise serializers.ValidationError(
+                'Ингредиенты должны быть уникальными',
+            )
+
+        return data
+
     class Meta:
         model = Recipe
         fields = (

@@ -80,9 +80,6 @@ class RecipeIngredientAdmin(admin.ModelAdmin):
         'ingredient',
         'amount',
     )
-    list_filter = (
-        'name',
-    )
     empty_value_display = s.EMPTY_VALUE_DISPLAY
 
 

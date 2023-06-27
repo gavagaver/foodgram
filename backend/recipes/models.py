@@ -141,6 +141,17 @@ class RecipeIngredient(models.Model):
         help_text='Количество',
     )
 
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(
+                fields=(
+                    'recipe',
+                    'ingredient',
+                ),
+                name='unique_recipe_ingredient',
+            ),
+        )
+
 
 class Favorite(models.Model):
     user = models.ForeignKey(

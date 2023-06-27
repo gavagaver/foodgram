@@ -121,15 +121,18 @@ class RecipeWriteSerializer(ModelSerializer):
     cooking_time = serializers.IntegerField()
 
     def create_amount(self, recipe, ingredients):
+        recipe_ingredients = []
         for ingredient in ingredients:
             amount = ingredient['amount']
-            ingredient_id = ingredient['id']
-            ingredient = get_object_or_404(Ingredient, pk=ingredient_id)
-            RecipeIngredient.objects.update_or_create(
-                recipe=recipe,
-                ingredient=ingredient,
-                amount=amount,
+            ingredient = get_object_or_404(Ingredient, pk=ingredient['id'])
+            recipe_ingredients.append(
+                RecipeIngredient(
+                    recipe=recipe,
+                    ingredient=ingredient,
+                    amount=amount,
+                )
             )
+        RecipeIngredient.objects.bulk_create(recipe_ingredients)
 
     def create(self, validated_data):
         tags = validated_data.pop('tags')

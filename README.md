@@ -1,6 +1,13 @@
 # Foodgram - кулинарная соцсеть
+[![CI](https://github.com/gavagaver/foodgram-project-react/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/gavagaver/foodgram-project-react/actions/workflows/main.yml)
 
 Foodgram - веб-приложение, которое поможет приготовить вкусную еду, предоставляя доступ к рецептам сообщества увлеченных кулинаров. Каждый пользователь может создавать рецепты, указывая необходимые ингредиенты. Есть возможность сохранять понравившиеся рецепты, а также создавать списки покупок на основе выбранных рецептов и подписываться на любимых авторов.
+
+## Демонстрация
+Веб-приложение доступно [по ссылке](http://158.160.74.205).
+Доступ в админку:
+demo@admin.ru
+demo7944FG
 
 ## Установка и запуск
 1. [ ] Клонируем репозиторий 
@@ -23,19 +30,19 @@ docker-compose up -d --build
 ```
 1. [ ] Создаем миграции
 ``` 
-docker-compose exec web python manage.py makemigrations 
+docker-compose exec backend python manage.py makemigrations 
 ```
 1. [ ] Применяем миграции
 ``` 
-docker-compose exec web python manage.py migrate 
+docker-compose exec backend python manage.py migrate 
 ``` 
 1. [ ] Создаем суперпользователя
 ``` 
-docker-compose exec web python manage.py createsuperuser 
+docker-compose exec backend python manage.py createsuperuser 
 ``` 
 1. [ ] Собираем статику
 ``` 
-docker-compose exec web python manage.py collectstatic --no-input 
+docker-compose exec backend python manage.py collectstatic --no-input 
 ``` 
 
 ## Стек

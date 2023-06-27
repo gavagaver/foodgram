@@ -31,16 +31,13 @@ class TagSerializer(ModelSerializer):
 
 
 class RecipeIngredientReadSerializer(ModelSerializer):
-    id = serializers.SerializerMethodField(
-        method_name='get_id',
+    id = serializers.ReadOnlyField(
         source='ingredient.id',
     )
-    name = serializers.SerializerMethodField(
-        method_name='get_name',
+    name = serializers.ReadOnlyField(
         source='ingredient.name',
     )
-    measurement_unit = serializers.SerializerMethodField(
-        method_name='get_measurement_unit',
+    measurement_unit = serializers.ReadOnlyField(
         source='ingredient.measurement_unit',
     )
 
@@ -69,8 +66,9 @@ class RecipeIngredientWriteSerializer(serializers.ModelSerializer):
 class RecipeReadSerializer(ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     author = CustomUserSerializer(read_only=True)
-    ingredients = SerializerMethodField(
-        method_name='get_ingredients'
+    ingredients = RecipeIngredientReadSerializer(
+        source='recipeingredient_set',
+        many=True,
     )
     image = Base64ImageField()
     is_favorited = SerializerMethodField(
@@ -79,10 +77,6 @@ class RecipeReadSerializer(ModelSerializer):
     is_in_shopping_cart = SerializerMethodField(
         method_name='get_is_in_shopping_cart'
     )
-
-    def get_ingredients(self, obj):
-        ingredients = RecipeIngredient.objects.filter(recipe=obj)
-        return RecipeIngredientReadSerializer(ingredients, many=True).data
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')

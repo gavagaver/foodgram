@@ -49,6 +49,20 @@ class RecipeViewSet(ModelViewSet):
             return RecipeReadSerializer
         return RecipeWriteSerializer
 
+    def post_delete_recipe(self, request, pk, model):
+        recipe = get_object_or_404(Recipe, pk=pk)
+        user = request.user
+        if request.method == 'DELETE':
+            model.objects.filter(user=user, recipe=recipe).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        model.objects.create(user=user, recipe=recipe)
+        serializer = RecipeCardSerializer(
+            recipe,
+            context={'request': request}
+        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     @action(
         detail=True,
         url_path='favorite',
@@ -56,15 +70,7 @@ class RecipeViewSet(ModelViewSet):
         permission_classes=(IsAuthenticated,)
     )
     def favorite(self, request, pk):
-        recipe = get_object_or_404(Recipe, pk=pk)
-        user = request.user
-        if request.method == 'DELETE':
-            Favorite.objects.filter(user=user, recipe=recipe).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        Favorite.objects.create(user=user, recipe=recipe)
-        serializer = RecipeCardSerializer(recipe)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self.post_delete_recipe(request, pk, Favorite)
 
     @action(
         detail=True,
@@ -72,20 +78,7 @@ class RecipeViewSet(ModelViewSet):
         methods=('POST', 'DELETE'),
     )
     def shopping_cart(self, request, pk):
-        recipe = get_object_or_404(Recipe, pk=pk)
-        if request.method == 'DELETE':
-            ShoppingCart.objects.filter(
-                user=request.user,
-                recipe=recipe
-            ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
-        ShoppingCart.objects.create(user=request.user, recipe=recipe)
-        serializer = RecipeCardSerializer(
-            recipe,
-            context={'request': request}
-        )
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self.post_delete_recipe(request, pk, ShoppingCart)
 
     @action(
         detail=False,

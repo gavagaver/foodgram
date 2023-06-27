@@ -78,7 +78,10 @@ jobs:
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             sudo docker pull gavagaver/foodgram_backend:latest
             sudo docker pull gavagaver/foodgram_frontend:latest
-            sudo docker-compose up -d         
+            sudo docker-compose up -d
+            sudo docker-compose exec -T backend python manage.py makemigrations
+            sudo docker-compose exec -T backend python manage.py migrate
+            sudo docker-compose exec -T backend python manage.py collectstatic --no-input
                 
   send_message:
     runs-on: ubuntu-latest

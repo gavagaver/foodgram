@@ -124,11 +124,10 @@ class RecipeWriteSerializer(ModelSerializer):
         recipe_ingredients = []
         for ingredient in ingredients:
             amount = ingredient['amount']
-            ingredient = get_object_or_404(Ingredient, pk=ingredient['id'])
             recipe_ingredients.append(
                 RecipeIngredient(
                     recipe=recipe,
-                    ingredient=ingredient,
+                    ingredient=ingredient['id'],
                     amount=amount,
                 )
             )

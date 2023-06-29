@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
@@ -126,7 +127,14 @@ class RecipeWriteSerializer(ModelSerializer):
             recipe_ingredients.append(
                 RecipeIngredient(
                     recipe=recipe,
-                    ingredient=ingredient.get('id'),
+                    ingredient=get_object_or_404(
+                        Ingredient,
+                        pk=ingredient['id'],
+                    ),
+                    # Если передаю id вместо объекта, падает с ошибкой
+                    # ValueError Cannot assign "253":
+                    # "RecipeIngredient.ingredient" must be
+                    # a "Ingredient" instance.
                     amount=amount,
                 )
             )

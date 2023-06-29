@@ -39,7 +39,7 @@ class Command(BaseCommand):
         try:
             for model, file_name in self.MODELS_FILES.items():
                 file_path = os.path.join(
-                    settings.DATA_PATH,
+                    settings.BASE_DIR,
                     f'{file_name}'
                 )
                 last_id = Ingredient.objects.aggregate(Max('id'))['id__max']

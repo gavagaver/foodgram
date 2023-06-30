@@ -126,7 +126,9 @@ class RecipeWriteSerializer(ModelSerializer):
             recipe_ingredients.append(
                 RecipeIngredient(
                     recipe=recipe,
-                    ingredient=ingredient.get('id'),
+                    ingredient=Ingredient(
+                        pk=ingredient['id'],
+                    ),
                     amount=amount,
                 )
             )

@@ -53,9 +53,21 @@ class RecipeViewSet(ModelViewSet):
         recipe = get_object_or_404(Recipe, pk=pk)
         user = request.user
         if request.method == 'DELETE':
-            model.objects.filter(user=user, recipe=recipe).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            if model.objects.filter(
+                    user=request.user,
+                    recipe__id=pk,
+            ).exists():
+                model.objects.filter(user=user, recipe=recipe).delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
 
+        if model.objects.filter(
+                user=request.user,
+                recipe__id=pk,
+        ).exists():
+            return Response(
+                {'errors': 'Нельзя добавить рецепт, он уже добавлен'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         model.objects.create(user=user, recipe=recipe)
         serializer = RecipeCardSerializer(
             recipe,

@@ -4,7 +4,14 @@ from rest_framework.fields import SerializerMethodField
 from rest_framework.relations import PrimaryKeyRelatedField
 from rest_framework.serializers import ModelSerializer
 
-from recipes.models import Ingredient, Recipe, RecipeIngredient, Tag
+from recipes.models import (
+    Ingredient,
+    Recipe,
+    RecipeIngredient,
+    Tag,
+    Favorite,
+    ShoppingCart,
+)
 from users.serializers import CustomUserSerializer
 
 
@@ -77,21 +84,20 @@ class RecipeReadSerializer(ModelSerializer):
         method_name='get_is_in_shopping_cart'
     )
 
-    def get_is_favorited(self, obj):
-        request = self.context.get('request')
+    def is_user_is_owner(self, request, obj, model):
         user = request.user
         return (
-            not user.is_anonymous
-            and user.favorites.filter(id=obj.id).exists()
+            user.is_authenticated
+            and model.objects.filter(user=user, recipe=obj, ).exists()
         )
+
+    def get_is_favorited(self, obj):
+        request = self.context.get('request')
+        return self.is_user_is_owner(request, obj, Favorite)
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
-        user = request.user
-        return (
-            not user.is_anonymous
-            and user.shopping_cart.filter(recipe=obj).exists()
-        )
+        return self.is_user_is_owner(request, obj, ShoppingCart)
 
     class Meta:
         model = Recipe

@@ -42,11 +42,12 @@ class Command(BaseCommand):
                     settings.BASE_DIR,
                     f'{file_name}'
                 )
+
                 try:
                     last_id = (
                         Ingredient.objects.aggregate(Max('id'))['id__max']
                     )
-                except:
+                except Exception as error:
                     last_id = 0
 
                 with open(file_path, 'r', encoding='utf-8') as csv_file:

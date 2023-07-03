@@ -1,3 +1,5 @@
+from django.conf import settings as s
+from django.core.validators import MinValueValidator
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
@@ -59,7 +61,14 @@ class RecipeIngredientReadSerializer(ModelSerializer):
 
 class RecipeIngredientWriteSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField()
-    amount = serializers.IntegerField()
+    amount = serializers.IntegerField(
+        validators=(
+            MinValueValidator(
+                s.MIN_INGREDIENT_AMOUNT,
+                message=f'Минимальное количество: {s.MIN_INGREDIENT_AMOUNT}',
+            ),
+        ),
+    )
 
     class Meta:
         model = Ingredient
@@ -123,7 +132,14 @@ class RecipeWriteSerializer(ModelSerializer):
     author = CustomUserSerializer(read_only=True)
     ingredients = RecipeIngredientWriteSerializer(many=True)
     image = Base64ImageField()
-    cooking_time = serializers.IntegerField()
+    cooking_time = serializers.IntegerField(
+        validators=(
+            MinValueValidator(
+                s.MIN_COOKING_TIME,
+                message=f'Минимальное время: {s.MIN_COOKING_TIME}',
+            ),
+        ),
+    )
 
     def create_amount(self, recipe, ingredients):
         recipe_ingredients = []

@@ -48,6 +48,7 @@ class Command(BaseCommand):
                     )
                 except:
                     last_id = 0
+
                 with open(file_path, 'r', encoding='utf-8') as csv_file:
                     reader = csv.reader(csv_file)
                     data = [model(instance_id, *row) for instance_id, row in

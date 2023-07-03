@@ -42,7 +42,12 @@ class Command(BaseCommand):
                     settings.BASE_DIR,
                     f'{file_name}'
                 )
-                last_id = Ingredient.objects.aggregate(Max('id'))['id__max']
+                try:
+                    last_id = (
+                        Ingredient.objects.aggregate(Max('id'))['id__max']
+                    )
+                except:
+                    last_id = 0
                 with open(file_path, 'r', encoding='utf-8') as csv_file:
                     reader = csv.reader(csv_file)
                     data = [model(instance_id, *row) for instance_id, row in

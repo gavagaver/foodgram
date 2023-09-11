@@ -45,6 +45,7 @@ docker-compose exec backend python manage.py collectstatic --no-input
 - gunicorn
 - nginx
 - Яндекс.Облако (Ubuntu 20.04)
+- Docker
 
 ## Об авторе
 Голишевский Андрей Вячеславович  
